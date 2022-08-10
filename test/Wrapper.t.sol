@@ -23,7 +23,7 @@ contract WrapperTest is Test {
 
     function setUp() public {
         gold = new Gold();
-        wrapper = new Wrapper(address(gold));
+        wrapper = new Wrapper(address(gold), 75e25);
     }
 
     function testDeposit() public {
@@ -31,10 +31,10 @@ contract WrapperTest is Test {
         gold.approve(address(wrapper), 50 ether);
 
         vm.expectEmit(true, true, false, true, address(wrapper));
-        emit Transfer(address(0), address(1), 50 ether);
+        emit Transfer(address(0), address(1), 37.5 ether);
 
         vm.expectEmit(true, true, false, true, address(wrapper));
-        emit Deposit(address(this), address(1), 50 ether, 50 ether);
+        emit Deposit(address(this), address(1), 50 ether, 37.5 ether);
 
         vm.expectEmit(true, true, false, true, address(gold));
         emit Transfer(address(this), address(wrapper), 50 ether);
@@ -42,7 +42,7 @@ contract WrapperTest is Test {
         wrapper.deposit(50 ether, address(1));
 
         assertEq(wrapper.totalAssets(), 50 ether);
-        assertEq(wrapper.balanceOf(address(1)), 50 ether);
+        assertEq(wrapper.balanceOf(address(1)), 37.5 ether);
     }
 
     function testCannotDepositWoApproval() public {
@@ -62,17 +62,17 @@ contract WrapperTest is Test {
         gold.approve(address(wrapper), 60 ether);
 
         vm.expectEmit(true, true, false, true, address(wrapper));
-        emit Transfer(address(0), address(1), 60 ether);
+        emit Transfer(address(0), address(1), 45 ether);
 
         vm.expectEmit(true, true, false, true, address(wrapper));
-        emit Deposit(address(this), address(1), 60 ether, 60 ether);
+        emit Deposit(address(this), address(1), 60 ether, 45 ether);
 
         vm.expectEmit(true, true, false, true, address(gold));
         emit Transfer(address(this), address(wrapper), 60 ether);
 
-        wrapper.mint(60 ether, address(1));
+        wrapper.mint(45 ether, address(1));
 
         assertEq(wrapper.totalAssets(), 60 ether);
-        assertEq(wrapper.balanceOf(address(1)), 60 ether);
+        assertEq(wrapper.balanceOf(address(1)), 45 ether);
     }
 }
