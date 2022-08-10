@@ -13,13 +13,15 @@ contract Wrapper is IERC4626, ERC20, Ownable {
     error TransferFailed();
     error ExchangeRateOutOfBounds();
 
-    event ExchangeRateChanged(uint256 exchange_rate);
+    /// @notice Notifies listeners about a change in the exchange rate
+    /// @param exchangeRate_ The new exchange rate as a ray (a fixed point decimal number with 27 digits)
+    event ExchangeRateChanged(uint256 exchangeRate_);
 
     address public immutable asset;
 
     /// @notice Stores the exchange rate at which GLD will be exchanged for wGLD (wGLD = GLD * rate)
     /// @dev this is a ray (a number with 27 digits of precision)
-    uint256 exchangeRate;
+    uint256 public exchangeRate;
 
     constructor(address assetAddress, uint256 exchangeRate_) ERC20('Wrapped Gold', 'wGLD') {
         if (assetAddress == address(0))
